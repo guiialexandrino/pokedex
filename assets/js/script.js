@@ -64,7 +64,7 @@ async function getCaracteristicas() {
       selectedPokemon.desc = info.flavor_text_entries[8].flavor_text;
       document.querySelector('#desc').innerHTML = selectedPokemon.desc.replace(
         /\n/g,
-        '<br/>',
+        ' ',
       );
 
       selectedPokemon.especie = info.genera.find((item) => {
