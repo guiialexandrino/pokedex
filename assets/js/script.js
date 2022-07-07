@@ -96,6 +96,7 @@ async function getCaracteristicas() {
       selectedPokemon.especie = info.genera.find((item) => {
         if (item.language.name === 'en') return item.genus;
       }).genus;
+
       document.querySelector('#especie').innerHTML =
         selectedPokemon.especie.split('Pokémon')[0];
     });
@@ -130,6 +131,7 @@ function traduzNomeTipo(item) {
   if (item == 'dragon') return 'Dragão';
   if (item == 'flying') return 'Voador';
   if (item == 'ice') return 'Gelo';
+  if (item == 'ghost') return 'Fantasma';
 }
 
 function retornaCodigoCorDoTipo(item) {
@@ -149,10 +151,17 @@ function retornaCodigoCorDoTipo(item) {
   if (item == 'dragon') return 'rgba(193, 203, 251, 0.8)';
   if (item == 'flying') return 'rgba(193, 249, 251, 0.8)';
   if (item == 'ice') return 'rgba(103, 243, 241, 0.8)';
+  if (item == 'ghost') return 'rgba(80, 12, 176, 0.8)';
 }
 
 function mudaCorTexto(item) {
-  if (item == 'fire' || item == 'psychic' || item == 'ground' || item == 'rock')
+  if (
+    item == 'fire' ||
+    item == 'psychic' ||
+    item == 'ground' ||
+    item == 'rock' ||
+    item == 'ghost'
+  )
     return 'white';
   return 'black';
 }
