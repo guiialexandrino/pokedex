@@ -1,4 +1,4 @@
-import { pokes } from './pokelist.js';
+import Utils from './utils.js';
 
 let pokemonToSearch = 1;
 let selectedPokemon = {
@@ -14,6 +14,67 @@ let selectedPokemon = {
   stats: {},
   desc: '',
 };
+let pokes = [];
+let results = [];
+let selectHtml = '';
+
+let loading = document.querySelector('.loading');
+
+async function getPokes() {
+  loading.style.display = 'block';
+  fetch(`https://pokeapi.co/api/v2/pokemon-species/?limit=351`)
+    .then((data) => {
+      return data.json();
+    })
+    .then((info) => {
+      results = info.results;
+    })
+    .then(() => {
+      for (let x = 0; x < results.length; x++) {
+        pokes.push({
+          value: x + 1,
+          label: `#${x + 1} - ${
+            results[x].name[0].toUpperCase() +
+            results[x].name.substring(1, results[x].name.length)
+          }`,
+        });
+      }
+
+      pokes.forEach((poke) => {
+        selectHtml += `<option value="${poke.value}">${poke.label}</option>`;
+      });
+
+      const select = document.getElementById('selectPokemon');
+      select.innerHTML = selectHtml;
+    });
+}
+
+getPokes();
+
+async function getCaracteristicas() {
+  loading.style.display = 'block';
+
+  fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonToSearch}`)
+    .then((data) => {
+      return data.json();
+    })
+    .then((info) => {
+      //altera info poke selecionado
+
+      selectedPokemon.desc = info.flavor_text_entries[8].flavor_text;
+      document.querySelector('#desc').innerHTML = selectedPokemon.desc.replace(
+        /\n/g,
+        '<br/>',
+      );
+
+      selectedPokemon.especie = info.genera.find((item) => {
+        if (item.language.name === 'en') return item.genus;
+      }).genus;
+
+      document.querySelector('#especie').innerHTML =
+        selectedPokemon.especie.split('Pokémon')[0];
+    });
+}
 
 async function getInformacoesGerais() {
   fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonToSearch}`)
@@ -21,6 +82,12 @@ async function getInformacoesGerais() {
       return data.json();
     })
     .then((info) => {
+      //turn off loading
+      setTimeout(() => {
+        loading.style.display = 'none';
+      }, 300);
+
+      //altera info poke selecionado
       selectedPokemon.id = info.id;
       selectedPokemon.nome = info.name;
 
@@ -38,13 +105,13 @@ async function getInformacoesGerais() {
       selectedPokemon.tipo = info.types.map((item) => {
         return item.type.name;
       });
-      document.querySelector('#tipo').innerHTML = retornaTipos(
+      document.querySelector('#tipo').innerHTML = Utils.retornaTipos(
         selectedPokemon.tipo,
       );
       //muda cor da mainColor
       document.documentElement.style.setProperty(
         '--mainColor',
-        retornaCodigoCorDoTipo(selectedPokemon.tipo[0]),
+        Utils.retornaCodigoCorDoTipo(selectedPokemon.tipo[0]),
       );
 
       selectedPokemon.altura = info.height / 10 + 'm';
@@ -56,9 +123,8 @@ async function getInformacoesGerais() {
       selectedPokemon.habilidade = info.abilities.map((item) => {
         return item.ability.name;
       });
-      document.querySelector('#habilidade').innerHTML = retornaHabilidades(
-        selectedPokemon.habilidade,
-      );
+      document.querySelector('#habilidade').innerHTML =
+        Utils.retornaHabilidades(selectedPokemon.habilidade);
 
       selectedPokemon.stats.hp = info.stats[0].base_stat;
       document.querySelector('#hp').value = selectedPokemon.stats.hp;
@@ -81,111 +147,16 @@ async function getInformacoesGerais() {
     });
 }
 
-async function getCaracteristicas() {
-  fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonToSearch}`)
-    .then((data) => {
-      return data.json();
-    })
-    .then((info) => {
-      selectedPokemon.desc = info.flavor_text_entries[8].flavor_text;
-      document.querySelector('#desc').innerHTML = selectedPokemon.desc.replace(
-        /\n/g,
-        '<br/>',
-      );
-
-      selectedPokemon.especie = info.genera.find((item) => {
-        if (item.language.name === 'en') return item.genus;
-      }).genus;
-
-      document.querySelector('#especie').innerHTML =
-        selectedPokemon.especie.split('Pokémon')[0];
-    });
-}
-
-function retornaTipos(array) {
-  let html = '';
-  array.forEach((item) => {
-    html += `<span style="color: ${mudaCorTexto(
-      item,
-    )}; background-color: ${retornaCodigoCorDoTipo(
-      item,
-    )} !important">${traduzNomeTipo(item)}</span>`;
-  });
-  return html;
-}
-
-function traduzNomeTipo(item) {
-  if (item == 'electric') return 'Elétrico';
-  if (item == 'normal') return 'Normal';
-  if (item == 'fire') return 'Fogo';
-  if (item == 'grass') return 'Grama';
-  if (item == 'poison') return 'Veneno';
-  if (item == 'water') return 'Water';
-  if (item == 'psychic') return 'Psíquico';
-  if (item == 'fairy') return 'Fada';
-  if (item == 'ground') return 'Terra';
-  if (item == 'steel') return 'Metal';
-  if (item == 'bug') return 'Inseto';
-  if (item == 'fighting') return 'Lutador';
-  if (item == 'rock') return 'Pedra';
-  if (item == 'dragon') return 'Dragão';
-  if (item == 'flying') return 'Voador';
-  if (item == 'ice') return 'Gelo';
-  if (item == 'ghost') return 'Fantasma';
-}
-
-function retornaCodigoCorDoTipo(item) {
-  if (item == 'electric') return 'rgba(254, 225, 103, 1)';
-  if (item == 'normal') return 'rgba(246, 153, 181, 0.8)';
-  if (item == 'fire') return 'rgba(243, 42, 42, 0.8)';
-  if (item == 'grass') return 'rgba(128, 240, 129, 0.8)';
-  if (item == 'poison') return 'rgba(197, 153, 246, 0.8)';
-  if (item == 'water') return 'rgba(0, 183, 211, 0.9)';
-  if (item == 'psychic') return 'rgba(116, 14, 142, 0.8)';
-  if (item == 'fairy') return 'rgba(225, 68, 178, 0.8)';
-  if (item == 'ground') return 'rgba(102, 57, 17, 0.8)';
-  if (item == 'steel') return 'rgba(189, 187, 184, 0.8)';
-  if (item == 'bug') return 'rgba(214, 249, 123, 0.8)';
-  if (item == 'fighting') return 'rgba(186, 173, 146, 0.8)';
-  if (item == 'rock') return 'rgba(67, 66, 65, 0.8)';
-  if (item == 'dragon') return 'rgba(193, 203, 251, 0.8)';
-  if (item == 'flying') return 'rgba(193, 249, 251, 0.8)';
-  if (item == 'ice') return 'rgba(103, 243, 241, 0.8)';
-  if (item == 'ghost') return 'rgba(80, 12, 176, 0.8)';
-}
-
-function mudaCorTexto(item) {
-  if (
-    item == 'fire' ||
-    item == 'psychic' ||
-    item == 'ground' ||
-    item == 'rock' ||
-    item == 'ghost'
-  )
-    return 'white';
-  return 'black';
-}
-
-function retornaHabilidades(array) {
-  let html = '';
-  array.forEach((item) => {
-    html += `<span>${
-      item[0].toUpperCase() + item.substring(1, item.length)
-    }</span><br/>`;
-  });
-  return html;
-}
-
-getInformacoesGerais();
 getCaracteristicas();
+getInformacoesGerais();
 
 const select = document.getElementById('selectPokemon');
 
 function mudouPoke() {
   pokemonToSearch = select.options[select.selectedIndex].value;
 
-  getInformacoesGerais();
   getCaracteristicas();
+  getInformacoesGerais();
 }
 
 select.addEventListener('change', mudouPoke);

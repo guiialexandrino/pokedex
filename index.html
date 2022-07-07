@@ -7,12 +7,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pokedex</title>
   <link rel="shortcut icon" href="./assets/img/icon.ico" />
+  <link rel="stylesheet" type="text/css" href="./assets/css/loading.css" />
   <link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
   <link rel="stylesheet" type="text/css" href="./assets/css/responsividade.css" />
 </head>
 
 <body>
   <div class="wrapper">
+
+    <div class="loading">
+      <div class="loading-position">
+        <img class="pokeball" src="./assets/img/pokeball.png" />
+      </div>
+    </div>
+
     <div class="card">
 
       <select class="selectPoke" id="selectPokemon" change="mudouPoke">
@@ -84,9 +92,10 @@
           <span>VELOCIDADE</span>
         </div>
       </div>
+
     </div>
   </div>
-  </div>
+
   <script type="module" src="./assets/js/script.js"></script>
 </body>
 
