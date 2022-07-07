@@ -134,11 +134,13 @@ select {
   font-weight: 600;
   font-size: 1.1rem;
   margin: 0px 5px 0px 5px;
+  line-height: 1.7rem;
   width: 25%;
 }
 
 .features > span > p {
   color: black;
+  line-height: 1.3rem;
 }
 
 .description {
