@@ -108,8 +108,8 @@ select {
   position: none;
   background-color: var(--mainColor);
   opacity: 0.3;
-  width: 350px;
-  height: 350px;
+  width: 380px;
+  height: 380px;
   border-radius: 50%;
   z-index: -1;
   /* top: 20px;
@@ -268,6 +268,8 @@ progress::-webkit-progress-bar {
     width: 100%;
     padding-left: 0px;
     margin-top: 15px;
+    flex-wrap: wrap;
+    line-height: 3rem;
     /* padding-top: 150px; */
   }
 
@@ -288,5 +290,12 @@ progress::-webkit-progress-bar {
 
   .circleMobile {
     position: absolute;
+  }
+}
+
+@media (max-width: 600px) {
+  .circleMobile {
+    width: 100%;
+    height: 100%;
   }
 }
