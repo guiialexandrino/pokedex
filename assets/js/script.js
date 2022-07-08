@@ -1,5 +1,7 @@
 import Utils from './utils.js';
 
+//variaveis globais
+
 let pokemonToSearch = 1;
 let selectedPokemon = {
   id: '',
@@ -19,6 +21,16 @@ let results = [];
 let selectHtml = '';
 
 let loading = document.querySelector('.loading');
+const select = document.getElementById('selectPokemon');
+const handleButton = document.getElementById('submit');
+const input = document.getElementById('searchInput');
+
+// adiciona eventos
+
+select.addEventListener('change', mudouPoke);
+handleButton.addEventListener('click', buscaPoke);
+
+// funcões
 
 async function getPokes() {
   loading.style.display = 'block';
@@ -48,8 +60,6 @@ async function getPokes() {
       select.innerHTML = selectHtml;
     });
 }
-
-getPokes();
 
 async function getCaracteristicas() {
   loading.style.display = 'block';
@@ -147,16 +157,40 @@ async function getInformacoesGerais() {
     });
 }
 
-getCaracteristicas();
-getInformacoesGerais();
-
-const select = document.getElementById('selectPokemon');
-
 function mudouPoke() {
+  document.querySelector('.noResult').style.display = 'none';
+  input.value = '';
+
   pokemonToSearch = select.options[select.selectedIndex].value;
 
   getCaracteristicas();
   getInformacoesGerais();
 }
 
-select.addEventListener('change', mudouPoke);
+function buscaPoke() {
+  event.preventDefault();
+  document.querySelector('.noResult').style.display = 'none';
+
+  const result = pokes.find((pokemon) => {
+    let name = pokemon.label.split(' ')[2];
+    return name.toUpperCase() === input.value.toUpperCase();
+  });
+
+  if (result) {
+    pokemonToSearch = result.value;
+    select.selectedIndex = result.value - 1;
+    getCaracteristicas();
+    getInformacoesGerais();
+    input.value = '';
+  } else document.querySelector('.noResult').style.display = 'block';
+}
+
+function limpaBuscaNaoEncontrada() {
+  document.querySelector('.noResult').style.display = 'none';
+}
+
+// chama métodos
+
+getPokes();
+getCaracteristicas();
+getInformacoesGerais();

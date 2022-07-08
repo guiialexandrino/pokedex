@@ -27,9 +27,19 @@
         <option value="bulbasaur">Option1</option>
       </select>
 
+      <form class="searchPoke">
+        <input id="searchInput" type="text" placeholder="Buscar pokémon" autocomplete="off">
+        <div class="noResult">
+          Pokémon não encotrado :(
+          <div id="triangulo"></div>
+        </div>
+        </input>
+        <button id="submit" type="submit" click="buscaPoke">Ok</button>
+      </form>
+
       <!-- Imagem dispositivos maiores -->
       <img id="foto" class="pokeImageCard" />
-      <div class="circle"></div>
+      <div class="fundo"></div>
 
       <!-- Imagem Mobile -->
       <div class="pokeImageMobile">
