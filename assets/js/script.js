@@ -3,27 +3,37 @@ import Utils from './utils.js';
 //variaveis globais
 
 let pokemonToSearch = 1;
-let selectedPokemon = {
-  id: '',
-  nome: '',
-  identificacao: '',
-  tipo: [],
-  foto: '',
-  altura: '',
-  peso: '',
-  especie: '',
-  habilidade: [],
-  stats: {},
-  desc: '',
-};
 let pokes = [];
-let results = [];
-let selectHtml = '';
 
-let loading = document.querySelector('.loading');
+// elementos reativos da pagina
+
+const loading = document.querySelector('.loading');
 const select = document.getElementById('selectPokemon');
 const handleButton = document.getElementById('submit');
 const input = document.getElementById('searchInput');
+const corDeFundo = (tipoPokemon) => {
+  document.documentElement.style.setProperty(
+    '--mainColor',
+    Utils.retornaCodigoCorDoTipo(tipoPokemon),
+  );
+};
+
+// dados reativos
+const _identificacaoPoke = document.querySelector('#num_nome');
+const _fotoPoke = document.querySelector('#foto');
+const _fotoPokeMobile = document.querySelector('#fotoMobile');
+const _tipoPoke = document.querySelector('#tipo');
+const _alturaPoke = document.querySelector('#altura');
+const _pesoPoke = document.querySelector('#peso');
+const _especiePoke = document.querySelector('#especie');
+const _habilidadePoke = document.querySelector('#habilidade');
+const _descricaoPoke = document.querySelector('#desc');
+const _hpPoke = document.querySelector('#hp');
+const _ataquePoke = document.querySelector('#ataque');
+const _defesaPoke = document.querySelector('#defesa');
+const _ataqueEspecialPoke = document.querySelector('#ataqueE');
+const _defesaEspecialPoke = document.querySelector('#defesaE');
+const _velocidadePoke = document.querySelector('#velocidade');
 
 // adiciona eventos
 
@@ -34,6 +44,8 @@ handleButton.addEventListener('click', buscaPoke);
 
 async function getPokes() {
   loading.style.display = 'block';
+  let results = [];
+
   fetch(`https://pokeapi.co/api/v2/pokemon-species/?limit=351`)
     .then((data) => {
       return data.json();
@@ -52,11 +64,12 @@ async function getPokes() {
         });
       }
 
+      let selectHtml = '';
+
       pokes.forEach((poke) => {
         selectHtml += `<option value="${poke.value}">${poke.label}</option>`;
       });
 
-      const select = document.getElementById('selectPokemon');
       select.innerHTML = selectHtml;
     });
 }
@@ -71,18 +84,14 @@ async function getCaracteristicas() {
     .then((info) => {
       //altera info poke selecionado
 
-      selectedPokemon.desc = info.flavor_text_entries[8].flavor_text;
-      document.querySelector('#desc').innerHTML = selectedPokemon.desc.replace(
-        /\n/g,
-        ' ',
-      );
+      _descricaoPoke.innerHTML =
+        info.flavor_text_entries[8].flavor_text.replace(/\n/g, ' ');
 
-      selectedPokemon.especie = info.genera.find((item) => {
+      const especie = info.genera.find((item) => {
         if (item.language.name === 'en') return item.genus;
       }).genus;
 
-      document.querySelector('#especie').innerHTML =
-        selectedPokemon.especie.split('Pokémon')[0];
+      _especiePoke.innerHTML = especie.split('Pokémon')[0];
     });
 }
 
@@ -97,63 +106,39 @@ async function getInformacoesGerais() {
         loading.style.display = 'none';
       }, 300);
 
-      //altera info poke selecionado
-      selectedPokemon.id = info.id;
-      selectedPokemon.nome = info.name;
+      _fotoPoke.src = info.sprites.other['official-artwork'].front_default;
 
-      selectedPokemon.foto =
+      _fotoPokeMobile.src =
         info.sprites.other['official-artwork'].front_default;
-      document.querySelector('#foto').src = selectedPokemon.foto;
-      document.querySelector('#fotoMobile').src = selectedPokemon.foto;
 
-      selectedPokemon.identificacao = `#${info.id} - ${
+      _identificacaoPoke.innerHTML = `#${info.id} - ${
         info.name[0].toUpperCase() + info.name.substring(1, info.name.length)
       }`;
-      document.querySelector('#num_nome').innerHTML =
-        selectedPokemon.identificacao;
 
-      selectedPokemon.tipo = info.types.map((item) => {
+      const tiposEncontrados = info.types.map((item) => {
         return item.type.name;
       });
-      document.querySelector('#tipo').innerHTML = Utils.retornaTipos(
-        selectedPokemon.tipo,
-      );
-      //muda cor da mainColor
-      document.documentElement.style.setProperty(
-        '--mainColor',
-        Utils.retornaCodigoCorDoTipo(selectedPokemon.tipo[0]),
-      );
+      _tipoPoke.innerHTML = Utils.retornaTipos(tiposEncontrados);
 
-      selectedPokemon.altura = info.height / 10 + 'm';
-      document.querySelector('#altura').innerHTML = selectedPokemon.altura;
+      corDeFundo(tiposEncontrados[0]); // muda cor de fundo
 
-      selectedPokemon.peso = info.weight / 10 + ' kgs';
-      document.querySelector('#peso').innerHTML = selectedPokemon.peso;
+      _alturaPoke.innerHTML = info.height / 10 + 'm';
 
-      selectedPokemon.habilidade = info.abilities.map((item) => {
+      _pesoPoke.innerHTML = info.weight / 10 + ' kgs';
+
+      const habilidadesEncontradas = info.abilities.map((item) => {
         return item.ability.name;
       });
-      document.querySelector('#habilidade').innerHTML =
-        Utils.retornaHabilidades(selectedPokemon.habilidade);
+      _habilidadePoke.innerHTML = Utils.retornaHabilidades(
+        habilidadesEncontradas,
+      );
 
-      selectedPokemon.stats.hp = info.stats[0].base_stat;
-      document.querySelector('#hp').value = selectedPokemon.stats.hp;
-
-      selectedPokemon.stats.ataque = info.stats[1].base_stat;
-      document.querySelector('#ataque').value = selectedPokemon.stats.ataque;
-
-      selectedPokemon.stats.defesa = info.stats[2].base_stat;
-      document.querySelector('#defesa').value = selectedPokemon.stats.defesa;
-
-      selectedPokemon.stats.ataqueE = info.stats[3].base_stat;
-      document.querySelector('#ataqueE').value = selectedPokemon.stats.ataqueE;
-
-      selectedPokemon.stats.defesaE = info.stats[4].base_stat;
-      document.querySelector('#defesaE').value = selectedPokemon.stats.defesaE;
-
-      selectedPokemon.stats.velocidade = info.stats[5].base_stat;
-      document.querySelector('#velocidade').value =
-        selectedPokemon.stats.velocidade;
+      _hpPoke.value = info.stats[0].base_stat;
+      _ataquePoke.value = info.stats[1].base_stat;
+      _defesaPoke.value = info.stats[2].base_stat;
+      _ataqueEspecialPoke.value = info.stats[3].base_stat;
+      _defesaEspecialPoke.value = info.stats[4].base_stat;
+      _velocidadePoke.value = info.stats[5].base_stat;
     });
 }
 
