@@ -39,6 +39,12 @@ const _velocidadePoke = document.querySelector('#velocidade');
 
 select.addEventListener('change', mudouPoke);
 handleButton.addEventListener('click', buscaPoke);
+_hpPoke.addEventListener('mouseenter', changeStatsInfo);
+_ataquePoke.addEventListener('mouseenter', changeStatsInfo);
+_defesaPoke.addEventListener('mouseenter', changeStatsInfo);
+_ataqueEspecialPoke.addEventListener('mouseenter', changeStatsInfo);
+_defesaEspecialPoke.addEventListener('mouseenter', changeStatsInfo);
+_velocidadePoke.addEventListener('mouseenter', changeStatsInfo);
 
 // funcões
 
@@ -172,6 +178,21 @@ function buscaPoke() {
 
 function limpaBuscaNaoEncontrada() {
   document.querySelector('.noResult').style.display = 'none';
+}
+
+function changeStatsInfo(e) {
+  let info = '';
+  if (e.srcElement.id === 'hp') info = `"${_hpPoke.value} / 255"`;
+  if (e.srcElement.id === 'ataque') info = `"${_ataquePoke.value} / 180"`;
+  if (e.srcElement.id === 'defesa') info = `"${_defesaPoke.value} / 230"`;
+  if (e.srcElement.id === 'ataqueE')
+    info = `"${_ataqueEspecialPoke.value} / 180"`;
+  if (e.srcElement.id === 'defesaE')
+    info = `"${_defesaEspecialPoke.value} / 230"`;
+  if (e.srcElement.id === 'velocidade')
+    info = `"${_velocidadePoke.value} / 180"`;
+
+  document.documentElement.style.setProperty('--statsText', info);
 }
 
 // chama métodos

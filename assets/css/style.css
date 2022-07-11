@@ -12,6 +12,7 @@ p {
 :root {
   --mainColor: grey;
   --widthCard: 1000px;
+  --statsText: 'Status';
 }
 
 * {
@@ -235,12 +236,35 @@ progress::-webkit-progress-value {
 }
 
 progress:hover::-webkit-progress-value {
-  -webkit-filter: brightness(70%);
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
-  -ms-transition: all 0.3s ease;
-  transition: all 0.3s ease;
+  -webkit-filter: brightness(80%);
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+progress:hover::before {
+  content: var(--statsText);
+  position: absolute;
+  width: 100px;
+  top: 17px;
+  right: 30px;
+  z-index: 9000;
+  font-weight: 550;
+  color: #333;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 5px;
+  animation: fadeIn 0.7s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 progress::-webkit-progress-bar {
