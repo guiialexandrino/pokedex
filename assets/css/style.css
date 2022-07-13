@@ -247,13 +247,13 @@ progress:hover::-webkit-progress-value {
 progress:hover::before {
   content: var(--statsText);
   position: absolute;
-  width: 100px;
+  width: 45px;
   top: 17px;
-  right: 30px;
+  right: 55px;
   z-index: 9000;
   font-weight: 550;
   color: #333;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.5);
   border-radius: 5px;
   animation: fadeIn 0.7s;
 }

@@ -97,6 +97,11 @@
   .circleMobile {
     position: absolute;
   }
+
+  progress:hover::before {
+    right: 0;
+    left: 44%;
+  }
 }
 
 @media (max-width: 600px) {
