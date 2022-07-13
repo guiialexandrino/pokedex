@@ -183,14 +183,14 @@ function limpaBuscaNaoEncontrada() {
 function changeStatsInfo(e) {
   let info = '';
   if (e.srcElement.id === 'hp') info = `"${_hpPoke.value} / 255"`;
-  if (e.srcElement.id === 'ataque') info = `"${_ataquePoke.value} / 180"`;
-  if (e.srcElement.id === 'defesa') info = `"${_defesaPoke.value} / 230"`;
+  if (e.srcElement.id === 'ataque') info = `"${_ataquePoke.value} / 255"`;
+  if (e.srcElement.id === 'defesa') info = `"${_defesaPoke.value} / 255"`;
   if (e.srcElement.id === 'ataqueE')
-    info = `"${_ataqueEspecialPoke.value} / 180"`;
+    info = `"${_ataqueEspecialPoke.value} / 255"`;
   if (e.srcElement.id === 'defesaE')
-    info = `"${_defesaEspecialPoke.value} / 230"`;
+    info = `"${_defesaEspecialPoke.value} / 255"`;
   if (e.srcElement.id === 'velocidade')
-    info = `"${_velocidadePoke.value} / 180"`;
+    info = `"${_velocidadePoke.value} / 255"`;
 
   document.documentElement.style.setProperty('--statsText', info);
 }
