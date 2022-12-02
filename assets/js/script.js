@@ -48,7 +48,7 @@ _velocidadePoke.addEventListener('mouseenter', changeStatsInfo);
 
 // funcões
 
-async function getPokes() {
+function getPokes() {
   loading.style.display = 'block';
   let results = [];
 
@@ -80,7 +80,7 @@ async function getPokes() {
     });
 }
 
-async function getCaracteristicas() {
+function getCaracteristicas() {
   loading.style.display = 'block';
 
   fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonToSearch}`)
@@ -101,7 +101,7 @@ async function getCaracteristicas() {
     });
 }
 
-async function getInformacoesGerais() {
+function getInformacoesGerais() {
   fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonToSearch}`)
     .then((data) => {
       return data.json();
