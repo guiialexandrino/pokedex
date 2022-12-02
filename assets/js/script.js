@@ -146,32 +146,11 @@ function getInformacoesGerais() {
       _defesaEspecialPoke.value = info.stats[4].base_stat;
       _velocidadePoke.value = info.stats[5].base_stat;
 
-      /* evitar disparidade nos status defesa e sp.defesa - devido ao shuckle */
+      //verificar se o pokemon voa, inserir animação
+      verificaVoador(tiposEncontrados, habilidadesEncontradas);
 
-      //   _hpPoke.max = 255;
-      //   _defesaPoke.max = 230;
-      //   _defesaEspecialPoke.max = 230;
-
-      //   if (_defesaPoke.value < 230) {
-      //     _defesaPoke.max =
-      //       _defesaPoke.value < 160 ? 160 : _defesaPoke.value * 1.15;
-      //   }
-
-      //   if (_defesaEspecialPoke.value < 230) {
-      //     _defesaEspecialPoke.max =
-      //       _defesaEspecialPoke.value < 154
-      //         ? 154
-      //         : _defesaEspecialPoke.value * 1.15;
-      //   }
-
-      //   if (_hpPoke.value < 249) {
-      //     _hpPoke.max =
-      //       _hpPoke.value < 154
-      //         ? 154
-      //         : _hpPoke.value >= 190
-      //         ? _hpPoke.value * 1.2
-      //         : _hpPoke.value * 1.3;
-      //   }
+      /* tratamento para outliers */
+      tratamentoOutliers();
     });
 }
 
@@ -203,10 +182,6 @@ function buscaPoke() {
   } else document.querySelector('.noResult').style.display = 'block';
 }
 
-function limpaBuscaNaoEncontrada() {
-  document.querySelector('.noResult').style.display = 'none';
-}
-
 function changeStatsInfo(e) {
   let info = '';
   if (e.srcElement.id === 'hp') info = `"${_hpPoke.value}"`;
@@ -217,6 +192,49 @@ function changeStatsInfo(e) {
   if (e.srcElement.id === 'velocidade') info = `"${_velocidadePoke.value}"`;
 
   document.documentElement.style.setProperty('--statsText', info);
+}
+
+function verificaVoador(arrayTipos, arrayHabilidades) {
+  if (arrayTipos.includes('flying') || arrayHabilidades.includes('levitate')) {
+    _fotoPoke.style.animation = 'flyingPoke 2s ease-in-out infinite';
+    _fotoPokeMobile.style.animation = 'flyingPoke 2s ease-in-out infinite';
+  } else {
+    _fotoPoke.style.animation = '';
+    _fotoPokeMobile.style.animation = '';
+  }
+}
+
+function tratamentoOutliers() {
+  _defesaPoke.max = 230;
+  _defesaEspecialPoke.max = 230;
+  _hpPoke.max = 255;
+
+  if (_defesaPoke.value >= 180) {
+    _defesaPoke.classList.add('progress-black');
+    _defesaPoke.classList.add('progress-star');
+  } else {
+    _defesaPoke.classList.remove('progress-black');
+    _defesaPoke.classList.remove('progress-star');
+    _defesaPoke.max = 170;
+  }
+
+  if (_defesaEspecialPoke.value >= 200) {
+    _defesaEspecialPoke.classList.add('progress-black');
+    _defesaEspecialPoke.classList.add('progress-star');
+  } else {
+    _defesaEspecialPoke.classList.remove('progress-black');
+    _defesaEspecialPoke.classList.remove('progress-star');
+    _defesaEspecialPoke.max = 170;
+  }
+
+  if (_hpPoke.value >= 170) {
+    _hpPoke.classList.add('progress-black');
+    _hpPoke.classList.add('progress-star');
+  } else {
+    _hpPoke.classList.remove('progress-black');
+    _hpPoke.classList.remove('progress-star');
+    _hpPoke.max = 170;
+  }
 }
 
 // chama métodos
