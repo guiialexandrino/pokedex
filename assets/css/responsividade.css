@@ -63,7 +63,7 @@
     left: 92%;
   }
 
-  @keyframes starMovement {
+  @keyframes movement {
     0% {
       transform: translateY(0px) rotate(0deg);
     }
