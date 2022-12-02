@@ -14,7 +14,7 @@ const input = document.getElementById('searchInput');
 const corDeFundo = (tipoPokemon) => {
   document.documentElement.style.setProperty(
     '--mainColor',
-    Utils.retornaCodigoCorDoTipo(tipoPokemon),
+    Utils.retornaCodigoCorDoTipo(tipoPokemon)
   );
 };
 
@@ -52,7 +52,7 @@ async function getPokes() {
   loading.style.display = 'block';
   let results = [];
 
-  fetch(`https://pokeapi.co/api/v2/pokemon-species/?limit=351`)
+  fetch(`https://pokeapi.co/api/v2/pokemon-species/?limit=386`)
     .then((data) => {
       return data.json();
     })
@@ -136,7 +136,7 @@ async function getInformacoesGerais() {
         return item.ability.name;
       });
       _habilidadePoke.innerHTML = Utils.retornaHabilidades(
-        habilidadesEncontradas,
+        habilidadesEncontradas
       );
 
       _hpPoke.value = info.stats[0].base_stat;
